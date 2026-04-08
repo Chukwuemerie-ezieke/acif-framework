@@ -1,0 +1,25 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node (if web tool is extended)
+node_modules/
+package-lock.json
+
+# Python (if build scripts are used)
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+
+# Logs
+*.log

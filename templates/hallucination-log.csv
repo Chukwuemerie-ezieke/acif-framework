@@ -1,0 +1,2 @@
+Content_ID,Date_Detected,AI_Tool_Used,AI_Tool_Version,Content_Type,Subject,Grade_Level,Description_of_Hallucination,How_Detected,Corrective_Action,Detected_By,Severity
+ACIF-2026-001,2026-04-08,Example AI Tool,v1.0,Lesson Plan,Basic Science,JSS 2,Example: AI stated that photosynthesis produces carbon dioxide instead of oxygen,Factual verification against NERDC textbook,Claim corrected to accurate statement and re-verified,Teacher Name,High

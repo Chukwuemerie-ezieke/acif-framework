@@ -1,0 +1,2 @@
+Content_ID,Date_Created,AI_Tool_Used,Content_Type,Subject,Grade_Level,Age_Band,Risk_Tier,Gate_1_Reviewer,Gate_1_Date,Gate_2_Reviewer,Gate_2_Date,Gate_3_Reviewer,Gate_3_Date,Gate_4_Reviewer,Gate_4_Date,Gate_5_Approver,Gate_5_Date,Hallucinations_Found,Hallucination_Log_Ref,Storage_Location,Status
+ACIF-2026-001,2026-04-08,Example AI Tool,Lesson Plan,Basic Science,JSS 2,Band 4,Tier 2,Teacher Name,2026-04-08,Subject HOD,2026-04-08,Band Reviewer,2026-04-09,Curriculum Lead,2026-04-09,Deputy Head,2026-04-09,Yes,HL-001,/docs/lessons/jss2-science-photosynthesis.pdf,Approved

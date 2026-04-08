@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200">
+  <defs>
+    <linearGradient id="tealGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#01696F;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0C4E54;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="800" height="200" rx="12" fill="url(#tealGrad)"/>
+  <!-- Decorative geometric pattern -->
+  <circle cx="720" cy="40" r="80" fill="#ffffff" opacity="0.05"/>
+  <circle cx="750" cy="160" r="60" fill="#ffffff" opacity="0.04"/>
+  <circle cx="680" cy="100" r="40" fill="#ffffff" opacity="0.06"/>
+  <!-- Left decorative element: 5 connected gate nodes -->
+  <g transform="translate(40, 100)">
+    <line x1="0" y1="0" x2="30" y2="0" stroke="#ffffff" stroke-width="2" opacity="0.4"/>
+    <circle cx="0" cy="0" r="8" fill="#ffffff" opacity="0.3"/>
+    <line x1="30" y1="0" x2="60" y2="0" stroke="#ffffff" stroke-width="2" opacity="0.4"/>
+    <circle cx="30" cy="0" r="8" fill="#ffffff" opacity="0.3"/>
+    <line x1="60" y1="0" x2="90" y2="0" stroke="#ffffff" stroke-width="2" opacity="0.4"/>
+    <circle cx="60" cy="0" r="8" fill="#ffffff" opacity="0.3"/>
+    <line x1="90" y1="0" x2="120" y2="0" stroke="#ffffff" stroke-width="2" opacity="0.4"/>
+    <circle cx="90" cy="0" r="8" fill="#ffffff" opacity="0.3"/>
+    <circle cx="120" cy="0" r="8" fill="#ffffff" opacity="0.3"/>
+    <!-- Gate numbers -->
+    <text x="0" y="4" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#01696F" font-weight="bold">1</text>
+    <text x="30" y="4" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#01696F" font-weight="bold">2</text>
+    <text x="60" y="4" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#01696F" font-weight="bold">3</text>
+    <text x="90" y="4" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#01696F" font-weight="bold">4</text>
+    <text x="120" y="4" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#01696F" font-weight="bold">5</text>
+  </g>
+  <!-- Main title -->
+  <text x="40" y="60" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="700" fill="#ffffff" letter-spacing="0.5">ACIF</text>
+  <text x="130" y="60" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="400" fill="#ffffff" opacity="0.8">v1.0</text>
+  <!-- Subtitle -->
+  <text x="40" y="82" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="400" fill="#ffffff" opacity="0.85">AI-Generated Content Integrity Framework for Curriculum</text>
+  <!-- Divider line -->
+  <line x1="40" y1="130" x2="300" y2="130" stroke="#ffffff" stroke-width="1" opacity="0.3"/>
+  <!-- Standards -->
+  <text x="40" y="150" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="400" fill="#ffffff" opacity="0.6">NERDC</text>
+  <text x="85" y="150" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="400" fill="#ffffff" opacity="0.3">|</text>
+  <text x="95" y="150" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="400" fill="#ffffff" opacity="0.6">NDPA 2023</text>
+  <text x="160" y="150" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="400" fill="#ffffff" opacity="0.3">|</text>
+  <text x="170" y="150" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="400" fill="#ffffff" opacity="0.6">ISO 42001</text>
+  <text x="235" y="150" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="400" fill="#ffffff" opacity="0.3">|</text>
+  <text x="245" y="150" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="400" fill="#ffffff" opacity="0.6">UNESCO AI in Education</text>
+  <!-- Company -->
+  <text x="40" y="175" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" fill="#ffffff" opacity="0.5">Harmony Digital Consults Ltd</text>
+</svg>
