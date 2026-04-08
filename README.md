@@ -1,15 +1,18 @@
 # ACIF — AI-Generated Content Integrity Framework for Curriculum
 
 <p align="center">
+  <a href="https://chukwuemerie-ezieke.github.io/acif-framework/"><strong>Launch Live Tool</strong></a> &middot;
   <img src="assets/acif-banner.svg" alt="ACIF Banner" width="800"/>
 </p>
 
 <p align="center">
+  <a href="https://chukwuemerie-ezieke.github.io/acif-framework/"><strong>Launch Live Tool</strong></a> &middot;
   <strong>Standards · Verification · Integrity</strong><br/>
   A comprehensive framework for ensuring AI-generated curriculum content is safe, accurate, and age-appropriate before it reaches students.
 </p>
 
 <p align="center">
+  <a href="https://chukwuemerie-ezieke.github.io/acif-framework/"><strong>Launch Live Tool</strong></a> &middot;
   <a href="#quick-start">Quick Start</a> ·
   <a href="#framework-overview">Overview</a> ·
   <a href="#web-tool">Web Tool</a> ·
@@ -101,7 +104,7 @@ acif-repo/
 
 1. **Read the Framework** — Start with the [Full Framework PDF](docs/ACIF_Framework_v1.0.pdf) or the [Markdown version](docs/ACIF_Framework_Full_Text.md)
 2. **Follow the Implementation Guide** — See [docs/IMPLEMENTATION_GUIDE.md](docs/IMPLEMENTATION_GUIDE.md) for a 3-month rollout plan
-3. **Use the Web Tool** — Open `web-tool/index.html` in any browser to start classifying and verifying AI content
+3. **Use the Web Tool** — Use the **[Live Web Tool](https://chukwuemerie-ezieke.github.io/acif-framework/)** or open `web-tool/index.html` locally
 4. **Print the Templates** — Use the files in `templates/` for offline verification workflows
 
 ### For Developers / EdTech Platforms
@@ -212,5 +215,6 @@ ACIF is part of Harmony Digital Consults' mission to make AI adoption in Nigeria
 ---
 
 <p align="center">
+  <a href="https://chukwuemerie-ezieke.github.io/acif-framework/"><strong>Launch Live Tool</strong></a> &middot;
   <sub>ACIF v1.0 · © 2026 Harmony Digital Consults Ltd · Licensed under CC BY-SA 4.0</sub>
 </p>
