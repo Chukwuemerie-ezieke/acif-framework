@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACIF Verification Pipeline — Harmony Digital Consults</title>
+  <meta name="description" content="AI-Generated Content Integrity Framework (ACIF) Verification Pipeline Tool for Nigerian Classrooms">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='16' fill='%2301696F'/><text x='16' y='21' text-anchor='middle' fill='white' font-family='Inter,sans-serif' font-weight='700' font-size='14'>HD</text></svg>">
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header" id="header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <a href="#" class="logo-link" onclick="navigateTo('dashboard'); return false;">
+          <svg class="logo-svg" width="40" height="40" viewBox="0 0 40 40" aria-label="Harmony Digital Consults">
+            <circle cx="20" cy="20" r="20" fill="#01696F"/>
+            <text x="20" y="26" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-weight="700" font-size="16">HD</text>
+          </svg>
+          <div class="logo-text">
+            <span class="logo-name">Harmony Digital Consults</span>
+            <span class="logo-tagline">AI Content Integrity for Nigerian Classrooms</span>
+          </div>
+        </a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <nav class="nav" id="mainNav">
+        <a href="#" class="nav-link active" data-page="dashboard" onclick="navigateTo('dashboard'); return false;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </a>
+        <a href="#" class="nav-link" data-page="classifier" onclick="navigateTo('classifier'); return false;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Risk Classifier
+        </a>
+        <a href="#" class="nav-link" data-page="pipeline" onclick="navigateTo('pipeline'); return false;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Verification Pipeline
+        </a>
+        <a href="#" class="nav-link" data-page="age-checker" onclick="navigateTo('age-checker'); return false;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Age Checker
+        </a>
+        <a href="#" class="nav-link" data-page="hallucination-log" onclick="navigateTo('hallucination-log'); return false;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Hallucination Log
+        </a>
+        <a href="#" class="nav-link" data-page="registry" onclick="navigateTo('registry'); return false;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Content Registry
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main" id="mainContent">
+    <!-- ==================== DASHBOARD ==================== -->
+    <section class="page active" id="page-dashboard">
+      <div class="page-header">
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle">ACIF Verification Pipeline Overview</p>
+      </div>
+
+      <!-- Institution Card -->
+      <div class="card welcome-card">
+        <div class="welcome-content">
+          <div>
+            <h2 class="card-title">Welcome to ACIF</h2>
+            <p class="card-desc">AI-Generated Content Integrity Framework v1.0</p>
+          </div>
+          <div class="institution-field">
+            <label for="institutionName">Institution Name</label>
+            <input type="text" id="institutionName" placeholder="Enter your institution name" value="">
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-total">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number" id="statTotal">0</span>
+            <span class="stat-label">Total Content Items</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-pending">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number" id="statPending">0</span>
+            <span class="stat-label">Pending Review</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-approved">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number" id="statApproved">0</span>
+            <span class="stat-label">Approved</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-hallucinations">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number" id="statHallucinations">0</span>
+            <span class="stat-label">Hallucinations Logged</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <h3 class="section-heading">Quick Actions</h3>
+        <div class="actions-row">
+          <button class="action-btn action-btn-primary" onclick="navigateTo('classifier')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            Start New Review
+          </button>
+          <button class="action-btn" onclick="navigateTo('registry')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            View Registry
+          </button>
+          <button class="action-btn" onclick="navigateTo('hallucination-log')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Log Hallucination
+          </button>
+        </div>
+      </div>
+
+      <!-- Pipeline Diagram -->
+      <div class="card pipeline-overview">
+        <h3 class="section-heading">Five-Gate Verification Pipeline</h3>
+        <p class="card-desc" style="margin-bottom: var(--space-6);">Every piece of AI-generated content passes through these gates before reaching students.</p>
+        <div class="pipeline-diagram">
+          <div class="pipeline-node">
+            <div class="pipeline-circle">1</div>
+            <span class="pipeline-label">Pre-Delivery Screening</span>
+          </div>
+          <div class="pipeline-connector"></div>
+          <div class="pipeline-node">
+            <div class="pipeline-circle">2</div>
+            <span class="pipeline-label">Factual Verification</span>
+          </div>
+          <div class="pipeline-connector"></div>
+          <div class="pipeline-node">
+            <div class="pipeline-circle">3</div>
+            <span class="pipeline-label">Age-Appropriateness</span>
+          </div>
+          <div class="pipeline-connector"></div>
+          <div class="pipeline-node">
+            <div class="pipeline-circle">4</div>
+            <span class="pipeline-label">Curriculum Alignment</span>
+          </div>
+          <div class="pipeline-connector"></div>
+          <div class="pipeline-node">
+            <div class="pipeline-circle">5</div>
+            <span class="pipeline-label">Final Approval</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== RISK CLASSIFIER ==================== -->
+    <section class="page" id="page-classifier">
+      <div class="page-header">
+        <h1 class="page-title">Risk Tier Classifier</h1>
+        <p class="page-subtitle">Classify AI-generated content into Risk Tiers 1–4</p>
+      </div>
+
+      <div class="card classifier-card">
+        <div class="classifier-progress">
+          <div class="classifier-progress-bar" id="classifierProgress" style="width: 0%"></div>
+        </div>
+        <div id="classifierSteps">
+          <!-- Step 1 -->
+          <div class="classifier-step active" data-step="1">
+            <h3 class="step-title">
+              <span class="step-number">1</span>
+              What type of content is this?
+            </h3>
+            <div class="radio-group" data-question="contentType">
+              <label class="radio-option">
+                <input type="radio" name="contentType" value="administrative">
+                <span class="radio-custom"></span>
+                <div>
+                  <strong>Administrative / Logistical</strong>
+                  <span class="radio-desc">Timetables, activity schedules, templates</span>
+                </div>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="contentType" value="lesson">
+                <span class="radio-custom"></span>
+                <div>
+                  <strong>Lesson Plan / Study Notes</strong>
+                  <span class="radio-desc">Lesson plans, schemes of work, explanatory notes</span>
+                </div>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="contentType" value="health-science">
+                <span class="radio-custom"></span>
+                <div>
+                  <strong>Health / Science Content</strong>
+                  <span class="radio-desc">Anatomy, reproduction, disease, biology, chemistry</span>
+                </div>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="contentType" value="sensitive">
+                <span class="radio-custom"></span>
+                <div>
+                  <strong>Sensitive Topics</strong>
+                  <span class="radio-desc">Sexuality, puberty, politics, controversial social topics</span>
+                </div>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="contentType" value="external-exam">
+                <span class="radio-custom"></span>
+                <div>
+                  <strong>External Publication / Formal Exam</strong>
+                  <span class="radio-desc">Content for publication or formal assessment (WAEC/NECO)</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="classifier-step" data-step="2">
+            <h3 class="step-title">
+              <span class="step-number">2</span>
+              Is this content for Early Childhood (ages 3–5)?
+            </h3>
+            <div class="radio-group" data-question="earlyChildhood">
+              <label class="radio-option">
+                <input type="radio" name="earlyChildhood" value="yes">
+                <span class="radio-custom"></span>
+                <div><strong>Yes</strong><span class="radio-desc">Content targets nursery/pre-primary age group</span></div>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="earlyChildhood" value="no">
+                <span class="radio-custom"></span>
+                <div><strong>No</strong><span class="radio-desc">Content is for Primary 1 and above</span></div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="classifier-step" data-step="3">
+            <h3 class="step-title">
+              <span class="step-number">3</span>
+              Does the content contain specific statistics, dates, or numerical claims?
+            </h3>
+            <div class="radio-group" data-question="hasStats">
+              <label class="radio-option">
+                <input type="radio" name="hasStats" value="yes">
+                <span class="radio-custom"></span>
+                <div><strong>Yes</strong><span class="radio-desc">Contains specific numbers, dates, percentages, or data</span></div>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="hasStats" value="no">
+                <span class="radio-custom"></span>
+                <div><strong>No</strong><span class="radio-desc">General content without specific quantitative claims</span></div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="classifier-step" data-step="4">
+            <h3 class="step-title">
+              <span class="step-number">4</span>
+              Does the content reference real people or specific laws/regulations?
+            </h3>
+            <div class="radio-group" data-question="hasReferences">
+              <label class="radio-option">
+                <input type="radio" name="hasReferences" value="yes">
+                <span class="radio-custom"></span>
+                <div><strong>Yes</strong><span class="radio-desc">Mentions real living people, specific laws, or government policies</span></div>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="hasReferences" value="no">
+                <span class="radio-custom"></span>
+                <div><strong>No</strong><span class="radio-desc">No references to real people or specific legislation</span></div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="classifier-step" data-step="5">
+            <h3 class="step-title">
+              <span class="step-number">5</span>
+              Will this content be published or used in formal assessment?
+            </h3>
+            <div class="radio-group" data-question="isPublished">
+              <label class="radio-option">
+                <input type="radio" name="isPublished" value="yes">
+                <span class="radio-custom"></span>
+                <div><strong>Yes</strong><span class="radio-desc">For external publication, WAEC/NECO exams, or public distribution</span></div>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="isPublished" value="no">
+                <span class="radio-custom"></span>
+                <div><strong>No</strong><span class="radio-desc">Internal classroom use only</span></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="classifier-nav">
+          <button class="btn btn-secondary" id="classifierPrev" onclick="classifierPrevStep()" disabled>Previous</button>
+          <button class="btn btn-primary" id="classifierNext" onclick="classifierNextStep()" disabled>Next</button>
+        </div>
+
+        <!-- Result -->
+        <div class="classifier-result" id="classifierResult" style="display:none;">
+          <div class="tier-badge" id="tierBadge">
+            <span class="tier-number" id="tierNumber"></span>
+            <span class="tier-label" id="tierLabel"></span>
+          </div>
+          <div class="tier-details" id="tierDetails"></div>
+          <div class="tier-gates" id="tierGates"></div>
+          <button class="btn btn-primary btn-lg" onclick="proceedToPipeline()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            Proceed to Verification Pipeline
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VERIFICATION PIPELINE ==================== -->
+    <section class="page" id="page-pipeline">
+      <div class="page-header">
+        <h1 class="page-title">Five-Gate Verification Pipeline</h1>
+        <p class="page-subtitle">Complete each gate sequentially to verify AI-generated content</p>
+      </div>
+
+      <!-- Content Info -->
+      <div class="card pipeline-info-card">
+        <div class="pipeline-info-grid">
+          <div class="info-field">
+            <label for="pipelineContentTitle">Content Title</label>
+            <input type="text" id="pipelineContentTitle" placeholder="e.g. JSS2 Basic Science — Photosynthesis">
+          </div>
+          <div class="info-field">
+            <label for="pipelineAITool">AI Tool Used</label>
+            <input type="text" id="pipelineAITool" placeholder="e.g. ChatGPT 4o, Claude, Gemini">
+          </div>
+          <div class="info-field">
+            <label for="pipelineSubject">Subject</label>
+            <input type="text" id="pipelineSubject" placeholder="e.g. Basic Science">
+          </div>
+          <div class="info-field">
+            <label for="pipelineGrade">Grade Level</label>
+            <select id="pipelineGrade">
+              <option value="">Select grade level</option>
+              <option value="Early Childhood (Ages 3-5)">Early Childhood (Ages 3-5)</option>
+              <option value="Lower Primary (P1-3)">Lower Primary (P1-3)</option>
+              <option value="Upper Primary (P4-6)">Upper Primary (P4-6)</option>
+              <option value="Junior Secondary (JSS 1-3)">Junior Secondary (JSS 1-3)</option>
+              <option value="Senior Secondary (SS 1-3)">Senior Secondary (SS 1-3)</option>
+              <option value="Pre-Tertiary / Bridge">Pre-Tertiary / Bridge</option>
+            </select>
+          </div>
+          <div class="info-field">
+            <label>Risk Tier</label>
+            <div class="tier-display" id="pipelineTierDisplay">Not classified</div>
+          </div>
+          <div class="info-field">
+            <label>Content ID</label>
+            <div class="content-id-display" id="pipelineContentId">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pipeline Progress -->
+      <div class="pipeline-progress-bar">
+        <div class="pipeline-progress-track">
+          <div class="pipeline-progress-fill" id="pipelineProgressFill" style="width: 0%"></div>
+        </div>
+        <div class="pipeline-progress-labels">
+          <span class="progress-label" data-gate="1">Gate 1</span>
+          <span class="progress-label" data-gate="2">Gate 2</span>
+          <span class="progress-label" data-gate="3">Gate 3</span>
+          <span class="progress-label" data-gate="4">Gate 4</span>
+          <span class="progress-label" data-gate="5">Gate 5</span>
+        </div>
+      </div>
+
+      <!-- Gate 1 -->
+      <div class="gate-card" id="gate-1" data-gate="1">
+        <button class="gate-header" onclick="toggleGate(1)">
+          <div class="gate-header-left">
+            <div class="gate-number-badge">1</div>
+            <div>
+              <h3 class="gate-title">Pre-Delivery Screening</h3>
+              <span class="gate-role">Content Creator (Teacher / Curriculum Developer)</span>
+            </div>
+          </div>
+          <div class="gate-header-right">
+            <span class="gate-status" id="gate-1-status">Pending</span>
+            <svg class="gate-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </button>
+        <div class="gate-body" id="gate-1-body">
+          <div class="gate-checklist">
+            <label class="check-item"><input type="checkbox" data-gate="1"> Content is properly labelled as AI-generated</label>
+            <label class="check-item"><input type="checkbox" data-gate="1"> Risk Tier assigned</label>
+            <label class="check-item"><input type="checkbox" data-gate="1"> Age Band confirmed</label>
+            <label class="check-item"><input type="checkbox" data-gate="1"> AI tool name and version recorded</label>
+            <label class="check-item"><input type="checkbox" data-gate="1"> Generation prompt documented</label>
+            <label class="check-item"><input type="checkbox" data-gate="1"> Red flags screened (Section 5.2 of ACIF)</label>
+            <label class="check-item"><input type="checkbox" data-gate="1"> Readability score checked (Flesch-Kincaid matches band)</label>
+          </div>
+          <div class="gate-sign-off">
+            <div class="sign-off-field">
+              <label>Reviewer Name</label>
+              <input type="text" id="gate-1-reviewer" placeholder="Full name of reviewer">
+            </div>
+            <div class="sign-off-field">
+              <label>Date</label>
+              <input type="date" id="gate-1-date">
+            </div>
+          </div>
+          <button class="btn btn-primary gate-complete-btn" onclick="completeGate(1)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Mark Gate 1 Complete
+          </button>
+        </div>
+      </div>
+
+      <!-- Gate 2 -->
+      <div class="gate-card locked" id="gate-2" data-gate="2">
+        <button class="gate-header" onclick="toggleGate(2)">
+          <div class="gate-header-left">
+            <div class="gate-number-badge">2</div>
+            <div>
+              <h3 class="gate-title">Factual Verification (FACT Method)</h3>
+              <span class="gate-role">Subject Teacher / Content Reviewer</span>
+            </div>
+          </div>
+          <div class="gate-header-right">
+            <span class="gate-status" id="gate-2-status">Locked</span>
+            <svg class="gate-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </button>
+        <div class="gate-body" id="gate-2-body">
+          <div class="gate-checklist">
+            <label class="check-item"><input type="checkbox" data-gate="2"> FACT method applied to all factual claims</label>
+            <label class="check-item"><input type="checkbox" data-gate="2"> All claims tagged VERIFIED, MODIFIED, or REMOVED</label>
+            <label class="check-item"><input type="checkbox" data-gate="2"> Zero UNVERIFIED claims remain</label>
+            <label class="check-item"><input type="checkbox" data-gate="2"> Sources documented for verified claims</label>
+            <label class="check-item"><input type="checkbox" data-gate="2"> Statistics checked against original source or flagged as unverifiable</label>
+          </div>
+          <div class="gate-sign-off">
+            <div class="sign-off-field">
+              <label>Reviewer Name</label>
+              <input type="text" id="gate-2-reviewer" placeholder="Full name of reviewer">
+            </div>
+            <div class="sign-off-field">
+              <label>Date</label>
+              <input type="date" id="gate-2-date">
+            </div>
+          </div>
+          <button class="btn btn-primary gate-complete-btn" onclick="completeGate(2)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Mark Gate 2 Complete
+          </button>
+        </div>
+      </div>
+
+      <!-- Gate 3 -->
+      <div class="gate-card locked" id="gate-3" data-gate="3">
+        <button class="gate-header" onclick="toggleGate(3)">
+          <div class="gate-header-left">
+            <div class="gate-number-badge">3</div>
+            <div>
+              <h3 class="gate-title">Age-Appropriateness Review</h3>
+              <span class="gate-role">Educator with target age band experience</span>
+            </div>
+          </div>
+          <div class="gate-header-right">
+            <span class="gate-status" id="gate-3-status">Locked</span>
+            <svg class="gate-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </button>
+        <div class="gate-body" id="gate-3-body">
+          <div class="gate-checklist">
+            <label class="check-item"><input type="checkbox" data-gate="3"> Vocabulary complexity matches band specifications</label>
+            <label class="check-item"><input type="checkbox" data-gate="3"> Prohibited themes absent</label>
+            <label class="check-item"><input type="checkbox" data-gate="3"> Cultural sensitivity verified</label>
+            <label class="check-item"><input type="checkbox" data-gate="3"> Gender and ethnic representation checked for balance</label>
+            <label class="check-item"><input type="checkbox" data-gate="3"> Reading level confirmed</label>
+            <label class="check-item"><input type="checkbox" data-gate="3"> Sensitive topics handled per band guidelines</label>
+          </div>
+          <div class="gate-sign-off">
+            <div class="sign-off-field">
+              <label>Reviewer Name</label>
+              <input type="text" id="gate-3-reviewer" placeholder="Full name of reviewer">
+            </div>
+            <div class="sign-off-field">
+              <label>Date</label>
+              <input type="date" id="gate-3-date">
+            </div>
+          </div>
+          <button class="btn btn-primary gate-complete-btn" onclick="completeGate(3)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Mark Gate 3 Complete
+          </button>
+        </div>
+      </div>
+
+      <!-- Gate 4 -->
+      <div class="gate-card locked" id="gate-4" data-gate="4">
+        <button class="gate-header" onclick="toggleGate(4)">
+          <div class="gate-header-left">
+            <div class="gate-number-badge">4</div>
+            <div>
+              <h3 class="gate-title">Curriculum Alignment Check</h3>
+              <span class="gate-role">Head of Department / Curriculum Lead</span>
+            </div>
+          </div>
+          <div class="gate-header-right">
+            <span class="gate-status" id="gate-4-status">Locked</span>
+            <svg class="gate-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </button>
+        <div class="gate-body" id="gate-4-body">
+          <div class="gate-checklist">
+            <label class="check-item"><input type="checkbox" data-gate="4"> Content aligns with NERDC curriculum objectives</label>
+            <label class="check-item"><input type="checkbox" data-gate="4"> Learning outcomes match curriculum expectations</label>
+            <label class="check-item"><input type="checkbox" data-gate="4"> Assessment items match WAEC/NECO format where applicable</label>
+            <label class="check-item"><input type="checkbox" data-gate="4"> No topics outside curriculum scope for this level</label>
+            <label class="check-item"><input type="checkbox" data-gate="4"> Pedagogical approach is student-centred per NERDC</label>
+          </div>
+          <div class="gate-sign-off">
+            <div class="sign-off-field">
+              <label>Reviewer Name</label>
+              <input type="text" id="gate-4-reviewer" placeholder="Full name of reviewer">
+            </div>
+            <div class="sign-off-field">
+              <label>Date</label>
+              <input type="date" id="gate-4-date">
+            </div>
+          </div>
+          <button class="btn btn-primary gate-complete-btn" onclick="completeGate(4)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Mark Gate 4 Complete
+          </button>
+        </div>
+      </div>
+
+      <!-- Gate 5 -->
+      <div class="gate-card locked" id="gate-5" data-gate="5">
+        <button class="gate-header" onclick="toggleGate(5)">
+          <div class="gate-header-left">
+            <div class="gate-number-badge">5</div>
+            <div>
+              <h3 class="gate-title">Final Approval and Labelling</h3>
+              <span class="gate-role">Deputy Head (Academic) / AI Content Officer</span>
+            </div>
+          </div>
+          <div class="gate-header-right">
+            <span class="gate-status" id="gate-5-status">Locked</span>
+            <svg class="gate-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </button>
+        <div class="gate-body" id="gate-5-body">
+          <div class="gate-checklist">
+            <label class="check-item"><input type="checkbox" data-gate="5"> All previous gates completed and signed off</label>
+            <label class="check-item"><input type="checkbox" data-gate="5"> Content labelled with AI-source disclosure stamp</label>
+            <label class="check-item"><input type="checkbox" data-gate="5"> Content filed in AI Content Registry</label>
+            <label class="check-item"><input type="checkbox" data-gate="5"> Parental communication prepared (if required)</label>
+            <label class="check-item"><input type="checkbox" data-gate="5"> Content saved in approved format (PDF/Word) for archival</label>
+          </div>
+          <div class="gate-sign-off">
+            <div class="sign-off-field">
+              <label>Reviewer Name</label>
+              <input type="text" id="gate-5-reviewer" placeholder="Full name of approver">
+            </div>
+            <div class="sign-off-field">
+              <label>Date</label>
+              <input type="date" id="gate-5-date">
+            </div>
+          </div>
+          <button class="btn btn-primary gate-complete-btn" onclick="completeGate(5)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Mark Gate 5 Complete
+          </button>
+        </div>
+      </div>
+
+      <!-- Approve Content -->
+      <div class="pipeline-final" id="pipelineFinal" style="display:none;">
+        <div class="card approve-card">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#01696F" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <h3>All Gates Complete</h3>
+          <p>This content has passed all five verification gates and is ready for approval.</p>
+          <button class="btn btn-primary btn-lg" onclick="approveContent()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Approve Content &amp; Save to Registry
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== AGE CHECKER ==================== -->
+    <section class="page" id="page-age-checker">
+      <div class="page-header">
+        <h1 class="page-title">Age-Appropriateness Checker</h1>
+        <p class="page-subtitle">View standards and run age-band checks for AI-generated content</p>
+      </div>
+
+      <div class="card">
+        <label for="ageBandSelect" class="field-label">Select Age Band</label>
+        <select id="ageBandSelect" class="select-lg" onchange="showAgeBand()">
+          <option value="">Choose an age band…</option>
+          <option value="early-childhood">Band 1: Early Childhood (Ages 3–5)</option>
+          <option value="lower-primary">Band 2: Lower Primary (Ages 6–8)</option>
+          <option value="upper-primary">Band 3: Upper Primary (Ages 9–11)</option>
+          <option value="junior-secondary">Band 4: Junior Secondary (Ages 12–14)</option>
+          <option value="senior-secondary">Band 5: Senior Secondary (Ages 15–17)</option>
+          <option value="pre-tertiary">Band 6: Pre-Tertiary / Bridge (Ages 18+)</option>
+        </select>
+      </div>
+
+      <div id="ageBandContent" style="display:none;">
+        <div class="age-band-specs" id="ageBandSpecs"></div>
+
+        <div class="card" style="margin-top: var(--space-6);">
+          <h3 class="section-heading">Age-Appropriateness Checklist</h3>
+          <div class="gate-checklist" id="ageChecklist">
+            <label class="check-item"><input type="checkbox" class="age-check"> Target age band is clearly identified before AI generation</label>
+            <label class="check-item"><input type="checkbox" class="age-check"> Vocabulary complexity matches band specifications</label>
+            <label class="check-item"><input type="checkbox" class="age-check"> Themes do not include prohibited content for the band</label>
+            <label class="check-item"><input type="checkbox" class="age-check"> Cultural references are Nigerian or universally familiar</label>
+            <label class="check-item"><input type="checkbox" class="age-check"> Gender representation is balanced; no gender stereotyping</label>
+            <label class="check-item"><input type="checkbox" class="age-check"> Religious or ethnic references are respectful and balanced</label>
+            <label class="check-item"><input type="checkbox" class="age-check"> Visuals (if AI-generated) comply with age band visual guidelines</label>
+            <label class="check-item"><input type="checkbox" class="age-check"> Reading level assessed using Flesch-Kincaid or equivalent tool</label>
+            <label class="check-item"><input type="checkbox" class="age-check"> Content reviewed by an educator familiar with the specific age group</label>
+          </div>
+          <button class="btn btn-primary" style="margin-top: var(--space-4);" onclick="saveAgeCheckToReview()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+            Save to Current Review
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== HALLUCINATION LOG ==================== -->
+    <section class="page" id="page-hallucination-log">
+      <div class="page-header">
+        <h1 class="page-title">Hallucination Log</h1>
+        <p class="page-subtitle">Track and analyze AI hallucinations found during verification</p>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="hallucination-summary" id="hallucinationSummary">
+        <div class="card summary-mini">
+          <span class="summary-mini-number" id="halTotalCount">0</span>
+          <span class="summary-mini-label">Total Logged</span>
+        </div>
+        <div class="card summary-mini">
+          <span class="summary-mini-number" id="halTopTool">—</span>
+          <span class="summary-mini-label">Most Common AI Tool</span>
+        </div>
+        <div class="card summary-mini">
+          <span class="summary-mini-number" id="halTopSubject">—</span>
+          <span class="summary-mini-label">Most Common Subject</span>
+        </div>
+      </div>
+
+      <!-- Log Form -->
+      <div class="card">
+        <h3 class="section-heading">Log New Hallucination</h3>
+        <form id="hallucinationForm" onsubmit="logHallucination(event)">
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="halDate">Date</label>
+              <input type="date" id="halDate" required>
+            </div>
+            <div class="form-field">
+              <label for="halAITool">AI Tool Used</label>
+              <input type="text" id="halAITool" placeholder="e.g. ChatGPT 4o" required>
+            </div>
+            <div class="form-field">
+              <label for="halContentType">Content Type</label>
+              <select id="halContentType" required>
+                <option value="">Select…</option>
+                <option>Lesson Plan</option>
+                <option>Study Notes</option>
+                <option>Assessment</option>
+                <option>Worksheet</option>
+                <option>Explanatory Text</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="halSubject">Subject</label>
+              <input type="text" id="halSubject" placeholder="e.g. Basic Science" required>
+            </div>
+            <div class="form-field full-width">
+              <label for="halDescription">Description of Hallucination</label>
+              <textarea id="halDescription" rows="3" placeholder="Describe the inaccurate or fabricated content found…" required></textarea>
+            </div>
+            <div class="form-field full-width">
+              <label for="halDetection">How Was It Detected?</label>
+              <textarea id="halDetection" rows="2" placeholder="e.g. Cross-referenced with NERDC textbook, verified with WHO data" required></textarea>
+            </div>
+            <div class="form-field full-width">
+              <label for="halAction">Corrective Action Taken</label>
+              <textarea id="halAction" rows="2" placeholder="e.g. Replaced with verified information from approved textbook" required></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" style="margin-top: var(--space-4);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Log Hallucination
+          </button>
+        </form>
+      </div>
+
+      <!-- Log Table -->
+      <div class="card" style="margin-top: var(--space-6);">
+        <div class="table-header-row">
+          <h3 class="section-heading">Hallucination Records</h3>
+          <button class="btn btn-secondary btn-sm" onclick="exportHallucinationsCSV()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table" id="hallucinationTable">
+            <thead>
+              <tr>
+                <th class="sortable" onclick="sortHallucinations('date')">Date</th>
+                <th class="sortable" onclick="sortHallucinations('aiTool')">AI Tool</th>
+                <th>Content Type</th>
+                <th class="sortable" onclick="sortHallucinations('subject')">Subject</th>
+                <th>Description</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="hallucinationTableBody">
+              <tr class="empty-row"><td colspan="6">No hallucinations logged yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== CONTENT REGISTRY ==================== -->
+    <section class="page" id="page-registry">
+      <div class="page-header">
+        <h1 class="page-title">Content Registry</h1>
+        <p class="page-subtitle">All verified and approved AI-generated content items</p>
+      </div>
+
+      <!-- Filters -->
+      <div class="card filter-card">
+        <div class="filter-row">
+          <div class="filter-field">
+            <label for="regSearch">Search</label>
+            <input type="text" id="regSearch" placeholder="Search by title, subject…" oninput="filterRegistry()">
+          </div>
+          <div class="filter-field">
+            <label for="regTier">Risk Tier</label>
+            <select id="regTier" onchange="filterRegistry()">
+              <option value="">All Tiers</option>
+              <option value="1">Tier 1</option>
+              <option value="2">Tier 2</option>
+              <option value="3">Tier 3</option>
+              <option value="4">Tier 4</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label for="regStatus">Status</label>
+            <select id="regStatus" onchange="filterRegistry()">
+              <option value="">All</option>
+              <option value="Approved">Approved</option>
+              <option value="Pending">Pending</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+          <div class="filter-field filter-action">
+            <button class="btn btn-secondary btn-sm" onclick="exportRegistryCSV()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export CSV
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registry Table -->
+      <div class="card">
+        <div class="table-responsive">
+          <table class="data-table" id="registryTable">
+            <thead>
+              <tr>
+                <th>Content ID</th>
+                <th>Date</th>
+                <th>AI Tool</th>
+                <th>Subject</th>
+                <th>Grade Level</th>
+                <th>Risk Tier</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="registryTableBody">
+              <tr class="empty-row"><td colspan="8">No content items registered yet. Complete the Verification Pipeline to add items.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Modal for expanded registry rows -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal-content" id="modalContent"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>ACIF v1.0 &mdash; AI-Generated Content Integrity Framework</p>
+    <p>&copy; 2026 Harmony Digital Consults Ltd. All rights reserved.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
