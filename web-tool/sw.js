@@ -1,5 +1,5 @@
 // ACIF Service Worker — offline-first cache for static shell
-const CACHE_VERSION = 'acif-v1.2.0';
+const CACHE_VERSION = 'acif-v1.2.1';
 const CORE_ASSETS = [
   './',
   'index.html',
