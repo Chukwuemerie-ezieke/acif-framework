@@ -1,0 +1,33 @@
+{
+  "name": "ACIF — AI Content Integrity Framework",
+  "short_name": "ACIF",
+  "description": "Verify AI-generated curriculum content for Nigerian classrooms — risk tiers, age bands, Five-Gate pipeline, FACT hallucination detection.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#FFFFFF",
+  "theme_color": "#01696F",
+  "lang": "en-NG",
+  "categories": ["education", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "favicon-64.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "harmony-shield.png",
+      "sizes": "44x44",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "harmony-shield-large.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
