@@ -1412,3 +1412,24 @@ function qsOpen(i) {
   closeQuickSearch();
   if (r.action) r.action();
 }
+
+/* ===== PRIVACY NOTICE (v1.2.1) ===== */
+const PRIVACY_NOTICE_KEY = 'acif.privacyNoticeDismissed.v1';
+function initPrivacyNotice() {
+  const notice = document.getElementById('privacyNotice');
+  const close = document.getElementById('privacyNoticeClose');
+  if (!notice || !close) return;
+  if (localStorage.getItem(PRIVACY_NOTICE_KEY) === '1') {
+    notice.style.display = 'none';
+    return;
+  }
+  close.addEventListener('click', () => {
+    notice.style.display = 'none';
+    try { localStorage.setItem(PRIVACY_NOTICE_KEY, '1'); } catch (e) {}
+  });
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPrivacyNotice);
+} else {
+  initPrivacyNotice();
+}
