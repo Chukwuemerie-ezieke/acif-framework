@@ -135,6 +135,13 @@ p, li, figcaption { text-wrap: pretty; }
 }
 
 .logo-svg { flex-shrink: 0; border-radius: 50%; }
+.logo-img {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  display: block;
+}
 
 .logo-text { display: flex; flex-direction: column; }
 .logo-name { font-weight: 700; font-size: var(--text-sm); color: var(--color-primary); letter-spacing: -0.01em; }
