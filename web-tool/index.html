@@ -31,6 +31,15 @@
           </div>
         </a>
       </div>
+      <div style="display:flex; gap: var(--space-2); align-items: center; margin-left: auto;">
+        <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle dark mode" onclick="toggleTheme()" title="Toggle dark mode (Shift+D)">
+          <svg id="themeIconLight" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg id="themeIconDark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="theme-toggle-btn" id="searchBtn" aria-label="Quick search" onclick="openQuickSearch()" title="Search (Ctrl/⌘+K)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+      </div>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <line x1="3" y1="6" x2="21" y2="6"/>
@@ -57,11 +66,11 @@
         </a>
         <a href="#" class="nav-link" data-page="hallucination-log" onclick="navigateTo('hallucination-log'); return false;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          Hallucination Log
+          Hallucination Log <span class="nav-badge" id="navBadgeHal" style="display:none;"></span>
         </a>
         <a href="#" class="nav-link" data-page="registry" onclick="navigateTo('registry'); return false;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          Content Registry
+          Content Registry <span class="nav-badge" id="navBadgeReg" style="display:none;"></span>
         </a>
       </nav>
     </div>
@@ -144,6 +153,28 @@
           <button class="action-btn" onclick="navigateTo('hallucination-log')">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             Log Hallucination
+          </button>
+        </div>
+      </div>
+
+      <!-- Data & Settings -->
+      <div class="card" style="margin-top: var(--space-6);">
+        <h3 class="section-heading">Data &amp; Settings</h3>
+        <p class="card-desc">Back up your verification work, restore from a previous backup, or clear all locally stored data. Your data lives in this browser only — nothing is sent to a server.</p>
+        <div id="lastReviewedRow" style="margin-top: var(--space-3); font-size: 13px; color: var(--color-text-muted); display:none;"></div>
+        <div class="settings-row">
+          <button class="btn btn-secondary btn-sm" onclick="exportFullBackup()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export JSON Backup
+          </button>
+          <label class="btn btn-secondary btn-sm" style="cursor:pointer;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Restore Backup
+            <input type="file" accept=".json,application/json" style="display:none;" onchange="if(this.files[0]){importFullBackup(this.files[0]); this.value='';}">
+          </label>
+          <button class="btn btn-danger btn-sm" onclick="clearAllData()" style="background: var(--color-tier-4, #B71C1C); color: white;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+            Clear All Data
           </button>
         </div>
       </div>
@@ -663,6 +694,21 @@
             Save to Current Review
           </button>
         </div>
+
+        <!-- Reading-level scorer -->
+        <div class="card reading-scorer">
+          <h3 class="section-heading">Reading-Level Scorer</h3>
+          <p class="card-desc">Paste the AI-generated content below to get an instant Flesch-Kincaid grade level, word count, and an automated age-band match check.</p>
+          <textarea id="readingInput" placeholder="Paste content here (1–2 paragraphs is enough)…" oninput="scoreReadingLevel()"></textarea>
+          <div class="reading-metrics" id="readingMetrics" style="display:none;">
+            <div class="reading-metric"><div class="reading-metric-label">Grade Level</div><div class="reading-metric-value" id="rmGrade">—</div></div>
+            <div class="reading-metric"><div class="reading-metric-label">Reading Ease</div><div class="reading-metric-value" id="rmEase">—</div></div>
+            <div class="reading-metric"><div class="reading-metric-label">Words</div><div class="reading-metric-value" id="rmWords">—</div></div>
+            <div class="reading-metric"><div class="reading-metric-label">Sentences</div><div class="reading-metric-value" id="rmSents">—</div></div>
+            <div class="reading-metric"><div class="reading-metric-label">Reading Time</div><div class="reading-metric-value" id="rmTime">—</div></div>
+          </div>
+          <div class="reading-verdict neutral" id="readingVerdict" style="display:none;"></div>
+        </div>
       </div>
     </section>
 
@@ -863,6 +909,15 @@
     <p>ACIF v1.0 &mdash; AI-Generated Content Integrity Framework</p>
     <p>&copy; 2026 Harmony Digital Consults Ltd. All rights reserved.</p>
   </footer>
+
+  <!-- Quick Search overlay -->
+  <div class="qs-overlay" id="qsOverlay" onclick="if(event.target===this) closeQuickSearch()">
+    <div class="qs-box">
+      <input type="text" class="qs-input" id="qsInput" placeholder="Search registry, hallucinations, AI tools, subjects…" oninput="runQuickSearch()" onkeydown="qsKeydown(event)">
+      <div class="qs-results" id="qsResults"></div>
+      <div class="qs-hint"><kbd>↑↓</kbd> navigate · <kbd>Enter</kbd> open · <kbd>Esc</kbd> close</div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
   <script>

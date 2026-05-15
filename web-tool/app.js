@@ -270,6 +270,29 @@ function refreshDashboard() {
   document.getElementById('statPending').textContent = registry.filter(r => r.status === 'Pending').length;
   document.getElementById('statApproved').textContent = registry.filter(r => r.status === 'Approved').length;
   document.getElementById('statHallucinations').textContent = hallucinations.length;
+
+  // Nav badges
+  const setBadge = (id, n) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (n > 0) { el.textContent = n > 99 ? '99+' : n; el.style.display = 'inline-flex'; }
+    else { el.style.display = 'none'; }
+  };
+  setBadge('navBadgeReg', registry.length);
+  setBadge('navBadgeHal', hallucinations.length);
+
+  // Last reviewed
+  const lastRow = document.getElementById('lastReviewedRow');
+  if (lastRow) {
+    if (registry.length > 0) {
+      const sorted = [...registry].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+      const last = sorted[0];
+      lastRow.style.display = 'block';
+      lastRow.innerHTML = `<strong>Last reviewed:</strong> ${escapeHtml(last.contentTitle || last.contentId)} · ${escapeHtml(last.date || '')} · <span style="color: var(--color-primary); font-weight:600;">${escapeHtml(last.status || '')}</span>`;
+    } else {
+      lastRow.style.display = 'none';
+    }
+  }
 }
 
 // Institution name persistence
@@ -1128,4 +1151,264 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeModal();
   });
+
+  // Initialise theme
+  applyTheme(localStorage.getItem('acif.theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+
+  // Global keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      openQuickSearch();
+    } else if (e.shiftKey && !e.ctrlKey && !e.metaKey && e.key.toLowerCase() === 'd' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+      toggleTheme();
+    } else if (e.key === 'Escape') {
+      closeQuickSearch();
+    }
+  });
 });
+
+// ===== THEME TOGGLE =====
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('acif.theme', theme);
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', theme === 'dark' ? '#15282A' : '#01696F');
+  const light = document.getElementById('themeIconLight');
+  const dark = document.getElementById('themeIconDark');
+  if (light && dark) {
+    light.style.display = theme === 'dark' ? 'none' : '';
+    dark.style.display = theme === 'dark' ? '' : 'none';
+  }
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+}
+
+// ===== JSON BACKUP / RESTORE / CLEAR =====
+function exportFullBackup() {
+  const payload = {
+    _meta: {
+      app: 'ACIF',
+      version: '1.2.0',
+      exported: new Date().toISOString(),
+      institution: _store.institution || ''
+    },
+    institution: _store.institution || '',
+    registry: getRegistry(),
+    hallucinations: getHallucinations(),
+    nextId: _store.nextId || 1
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().split('T')[0];
+  a.href = url; a.download = `acif-backup-${stamp}.json`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Backup downloaded.', 'success');
+}
+
+function importFullBackup(file) {
+  if (!confirm('Restore this backup? It will REPLACE all current ACIF data in this browser. Export a backup first if you want to keep current data.')) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data || (!Array.isArray(data.registry) && !Array.isArray(data.hallucinations))) {
+        throw new Error('Not a valid ACIF backup file.');
+      }
+      _store.institution = data.institution || '';
+      saveRegistry(Array.isArray(data.registry) ? data.registry : []);
+      saveHallucinations(Array.isArray(data.hallucinations) ? data.hallucinations : []);
+      _store.nextId = data.nextId || 1;
+      const inst = document.getElementById('institutionName');
+      if (inst) inst.value = _store.institution;
+      refreshDashboard(); refreshRegistry(); refreshHallucinationLog();
+      showToast(`Backup restored: ${data.registry.length} items, ${data.hallucinations.length} hallucinations.`, 'success');
+    } catch (err) {
+      showToast('Could not restore. ' + (err.message || 'Invalid file.'), 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function clearAllData() {
+  if (!confirm('Permanently delete ALL ACIF data in this browser?\n\nThis cannot be undone. Export a backup first if you might need it.')) return;
+  if (!confirm('Are you absolutely sure? This will wipe the registry, hallucination log, and institution name.')) return;
+  try {
+    localStorage.removeItem(ACIF_STORAGE_KEY);
+  } catch (e) {}
+  // Reset live store
+  _store.institution = '';
+  saveRegistry([]);
+  saveHallucinations([]);
+  _store.nextId = 1;
+  const inst = document.getElementById('institutionName');
+  if (inst) inst.value = '';
+  refreshDashboard(); refreshRegistry(); refreshHallucinationLog();
+  showToast('All ACIF data cleared.', 'success');
+}
+
+// ===== READING-LEVEL SCORER =====
+function countSyllables(word) {
+  word = word.toLowerCase().replace(/[^a-z]/g, '');
+  if (!word) return 0;
+  if (word.length <= 3) return 1;
+  word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '');
+  word = word.replace(/^y/, '');
+  const matches = word.match(/[aeiouy]{1,2}/g);
+  return matches ? matches.length : 1;
+}
+
+function scoreReadingLevel() {
+  const txt = (document.getElementById('readingInput') || {}).value || '';
+  const metrics = document.getElementById('readingMetrics');
+  const verdict = document.getElementById('readingVerdict');
+  const trimmed = txt.trim();
+  if (!trimmed) { metrics.style.display = 'none'; verdict.style.display = 'none'; return; }
+
+  const sentences = (trimmed.match(/[^.!?…]+[.!?…]+/g) || [trimmed]).length;
+  const words = trimmed.split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
+  const syllables = words.reduce((s, w) => s + countSyllables(w), 0);
+  if (wordCount === 0) { metrics.style.display = 'none'; verdict.style.display = 'none'; return; }
+
+  // Flesch-Kincaid grade level
+  const grade = 0.39 * (wordCount / sentences) + 11.8 * (syllables / wordCount) - 15.59;
+  // Flesch reading ease
+  const ease = 206.835 - 1.015 * (wordCount / sentences) - 84.6 * (syllables / wordCount);
+  const readingMinutes = Math.max(1, Math.round(wordCount / 200));
+
+  document.getElementById('rmGrade').textContent = grade.toFixed(1);
+  document.getElementById('rmEase').textContent = Math.round(Math.max(0, Math.min(100, ease)));
+  document.getElementById('rmWords').textContent = wordCount;
+  document.getElementById('rmSents').textContent = sentences;
+  document.getElementById('rmTime').textContent = readingMinutes + ' min';
+  metrics.style.display = 'grid';
+
+  // Compare against selected age band
+  const band = (document.getElementById('ageBandSelect') || {}).value || '';
+  const bandGradeMap = {
+    'early-childhood':  [-2, 1],   // pre-K to grade 1
+    'lower-primary':    [1, 3],
+    'upper-primary':    [3, 5],
+    'junior-secondary': [6, 9],
+    'senior-secondary': [9, 12],
+    'pre-tertiary':     [11, 14]
+  };
+  if (band && bandGradeMap[band]) {
+    const [lo, hi] = bandGradeMap[band];
+    const bandLabel = document.querySelector(`#ageBandSelect option[value="${band}"]`).textContent;
+    if (grade >= lo - 1 && grade <= hi + 1) {
+      verdict.className = 'reading-verdict match';
+      verdict.innerHTML = `✓ Reading level <strong>${grade.toFixed(1)}</strong> fits ${escapeHtml(bandLabel)} (expected grade ${lo}–${hi}).`;
+    } else {
+      const tooHard = grade > hi;
+      verdict.className = 'reading-verdict mismatch';
+      verdict.innerHTML = `⚠ Reading level <strong>${grade.toFixed(1)}</strong> is ${tooHard ? 'TOO ADVANCED' : 'TOO SIMPLE'} for ${escapeHtml(bandLabel)} (expected grade ${lo}–${hi}). ${tooHard ? 'Consider simplifying vocabulary and sentence structure.' : 'Consider richer vocabulary and longer sentences.'}`;
+    }
+    verdict.style.display = 'block';
+  } else {
+    verdict.className = 'reading-verdict neutral';
+    verdict.textContent = 'Select an age band above to see the fit check.';
+    verdict.style.display = 'block';
+  }
+}
+
+// ===== QUICK SEARCH (Cmd/Ctrl+K) =====
+let qsActiveIdx = -1;
+let qsCurrentResults = [];
+
+function openQuickSearch() {
+  const ov = document.getElementById('qsOverlay');
+  const inp = document.getElementById('qsInput');
+  ov.classList.add('open');
+  setTimeout(() => { inp.focus(); inp.select(); }, 50);
+  runQuickSearch();
+}
+function closeQuickSearch() {
+  const ov = document.getElementById('qsOverlay');
+  if (ov) ov.classList.remove('open');
+  qsActiveIdx = -1; qsCurrentResults = [];
+}
+
+function runQuickSearch() {
+  const q = (document.getElementById('qsInput').value || '').trim().toLowerCase();
+  const resBox = document.getElementById('qsResults');
+  const results = [];
+  const matches = (s) => !q || (s || '').toLowerCase().includes(q);
+
+  // Navigation pages (only when query present)
+  if (q) {
+    const pages = [
+      { title: 'Dashboard', meta: 'Overview & settings', icon: 'D', action: () => navigateTo('dashboard') },
+      { title: 'Risk Classifier', meta: 'Classify new content', icon: 'R', action: () => navigateTo('classifier') },
+      { title: 'Verification Pipeline', meta: 'Five-gate review', icon: 'V', action: () => navigateTo('pipeline') },
+      { title: 'Age Checker', meta: 'Age-band & reading level', icon: 'A', action: () => navigateTo('age-checker') },
+      { title: 'Hallucination Log', meta: 'Log AI mistakes', icon: 'H', action: () => navigateTo('hallucination-log') },
+      { title: 'Content Registry', meta: 'All reviewed content', icon: 'C', action: () => navigateTo('registry') }
+    ];
+    pages.forEach(p => { if (matches(p.title) || matches(p.meta)) results.push(p); });
+  }
+
+  // Registry items
+  getRegistry().forEach(item => {
+    if (matches(item.contentId) || matches(item.contentTitle) || matches(item.aiTool) || matches(item.subject) || matches(item.grade)) {
+      results.push({
+        title: item.contentTitle || item.contentId,
+        meta: `Registry · ${item.contentId} · Tier ${item.tier} · ${item.status}`,
+        icon: 'R',
+        action: () => { closeQuickSearch(); navigateTo('registry'); setTimeout(() => showRegistryDetail(item), 200); }
+      });
+    }
+  });
+
+  // Hallucinations
+  getHallucinations().forEach(h => {
+    if (matches(h.aiTool) || matches(h.subject) || matches(h.description) || matches(h.contentType)) {
+      results.push({
+        title: (h.description || h.subject || 'Hallucination').substring(0, 80),
+        meta: `Hallucination · ${h.aiTool || ''} · ${h.date || ''}`,
+        icon: 'H',
+        action: () => { closeQuickSearch(); navigateTo('hallucination-log'); }
+      });
+    }
+  });
+
+  qsCurrentResults = results.slice(0, 20);
+  qsActiveIdx = qsCurrentResults.length > 0 ? 0 : -1;
+
+  if (qsCurrentResults.length === 0) {
+    resBox.innerHTML = `<div class="qs-empty">${q ? 'No matches. Try a different search.' : 'Type to search registry items, hallucinations, AI tools, subjects…'}</div>`;
+    return;
+  }
+  resBox.innerHTML = qsCurrentResults.map((r, i) => `
+    <div class="qs-result ${i === qsActiveIdx ? 'active' : ''}" data-idx="${i}" onclick="qsOpen(${i})">
+      <div class="qs-result-icon">${escapeHtml(r.icon)}</div>
+      <div class="qs-result-body">
+        <div class="qs-result-title">${escapeHtml(r.title)}</div>
+        <div class="qs-result-meta">${escapeHtml(r.meta)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function qsKeydown(e) {
+  if (e.key === 'ArrowDown') { e.preventDefault(); qsActiveIdx = Math.min(qsCurrentResults.length - 1, qsActiveIdx + 1); qsHighlight(); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); qsActiveIdx = Math.max(0, qsActiveIdx - 1); qsHighlight(); }
+  else if (e.key === 'Enter') { e.preventDefault(); qsOpen(qsActiveIdx); }
+}
+function qsHighlight() {
+  document.querySelectorAll('.qs-result').forEach((el, i) => {
+    el.classList.toggle('active', i === qsActiveIdx);
+    if (i === qsActiveIdx) el.scrollIntoView({ block: 'nearest' });
+  });
+}
+function qsOpen(i) {
+  if (i < 0 || i >= qsCurrentResults.length) return;
+  const r = qsCurrentResults[i];
+  closeQuickSearch();
+  if (r.action) r.action();
+}
