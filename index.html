@@ -12,6 +12,11 @@
   <link rel="icon" type="image/png" href="favicon-64.png">
   <link rel="shortcut icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="favicon-64.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#01696F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ACIF">
 </head>
 <body>
   <!-- HEADER -->
@@ -737,10 +742,17 @@
       <div class="card" style="margin-top: var(--space-6);">
         <div class="table-header-row">
           <h3 class="section-heading">Hallucination Records</h3>
-          <button class="btn btn-secondary btn-sm" onclick="exportHallucinationsCSV()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Export CSV
-          </button>
+          <div style="display:flex; gap: var(--space-2); flex-wrap:wrap;">
+            <label class="btn btn-secondary btn-sm" style="cursor:pointer;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Import CSV
+              <input type="file" accept=".csv,text/csv" style="display:none;" onchange="if(this.files[0]){importHallucinationsCSV(this.files[0]); this.value='';}">
+            </label>
+            <button class="btn btn-secondary btn-sm" onclick="exportHallucinationsCSV()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export CSV
+            </button>
+          </div>
         </div>
         <div class="table-responsive">
           <table class="data-table" id="hallucinationTable">
@@ -795,7 +807,12 @@
               <option value="Rejected">Rejected</option>
             </select>
           </div>
-          <div class="filter-field filter-action">
+          <div class="filter-field filter-action" style="display:flex; gap: var(--space-2); flex-wrap:wrap;">
+            <label class="btn btn-secondary btn-sm" style="cursor:pointer;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Import CSV
+              <input type="file" accept=".csv,text/csv" style="display:none;" onchange="if(this.files[0]){importRegistryCSV(this.files[0]); this.value='';}">
+            </label>
             <button class="btn btn-secondary btn-sm" onclick="exportRegistryCSV()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Export CSV
@@ -848,5 +865,12 @@
   </footer>
 
   <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW registration failed:', err));
+      });
+    }
+  </script>
 </body>
 </html>

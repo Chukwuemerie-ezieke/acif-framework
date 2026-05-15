@@ -1,7 +1,9 @@
 // ===== ACIF Verification Pipeline Tool — Application Logic =====
 
-// ===== DATA STORE (in-memory) =====
-const _store = {
+// ===== PERSISTENT DATA STORE (localStorage-backed) =====
+const ACIF_STORAGE_KEY = 'acif.store.v1';
+
+const _defaults = {
   institution: '',
   registry: [],
   hallucinations: [],
@@ -10,6 +12,36 @@ const _store = {
   currentTier: null,
   currentContentId: null
 };
+
+function _loadStore() {
+  try {
+    const raw = localStorage.getItem(ACIF_STORAGE_KEY);
+    if (!raw) return { ..._defaults };
+    const parsed = JSON.parse(raw);
+    return { ..._defaults, ...parsed };
+  } catch (e) {
+    console.warn('ACIF: failed to load store, resetting.', e);
+    return { ..._defaults };
+  }
+}
+
+function _persistStore() {
+  try {
+    // strip ephemeral keys we don't want to keep across sessions
+    const { pipeline, currentTier, currentContentId, ...persistable } = _store;
+    localStorage.setItem(ACIF_STORAGE_KEY, JSON.stringify(persistable));
+  } catch (e) {
+    console.warn('ACIF: failed to persist store.', e);
+  }
+}
+
+const _store = new Proxy(_loadStore(), {
+  set(target, key, value) {
+    target[key] = value;
+    _persistStore();
+    return true;
+  }
+});
 
 function loadData(key) {
   return _store[key] !== undefined ? _store[key] : null;
@@ -22,6 +54,170 @@ function getRegistry() { return _store.registry || []; }
 function saveRegistry(data) { _store.registry = data; }
 function getHallucinations() { return _store.hallucinations || []; }
 function saveHallucinations(data) { _store.hallucinations = data; }
+
+// ===== CSV IMPORT =====
+function parseCSV(text) {
+  const rows = [];
+  let cur = [], field = '', inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQ) {
+      if (c === '"' && text[i+1] === '"') { field += '"'; i++; }
+      else if (c === '"') { inQ = false; }
+      else { field += c; }
+    } else {
+      if (c === '"') { inQ = true; }
+      else if (c === ',') { cur.push(field); field = ''; }
+      else if (c === '\n') { cur.push(field); rows.push(cur); cur = []; field = ''; }
+      else if (c === '\r') { /* skip */ }
+      else { field += c; }
+    }
+  }
+  if (field.length > 0 || cur.length > 0) { cur.push(field); rows.push(cur); }
+  if (rows.length === 0) return { headers: [], rows: [] };
+  const headers = rows[0];
+  const data = rows.slice(1).filter(r => r.some(c => c && c.trim() !== ''))
+    .map(r => { const o = {}; headers.forEach((h, i) => o[h] = r[i] || ''); return o; });
+  return { headers, rows: data };
+}
+
+function importHallucinationsCSV(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const { rows } = parseCSV(e.target.result);
+      let imported = 0;
+      const existing = getHallucinations();
+      rows.forEach(r => {
+        existing.push({
+          id: Date.now() + Math.random(),
+          date: r['Date'] || r['date'] || new Date().toISOString().split('T')[0],
+          aiTool: r['AI Tool'] || r['aiTool'] || '',
+          contentType: r['Content Type'] || r['contentType'] || '',
+          subject: r['Subject'] || r['subject'] || '',
+          description: r['Description'] || r['description'] || '',
+          action: r['Action'] || r['action'] || ''
+        });
+        imported++;
+      });
+      saveHallucinations(existing);
+      refreshHallucinationLog();
+      refreshDashboard();
+      showToast(`Imported ${imported} hallucination record${imported === 1 ? '' : 's'}.`, 'success');
+    } catch (err) {
+      showToast('Failed to import CSV. Check the file format.', 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function importRegistryCSV(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const { rows } = parseCSV(e.target.result);
+      let imported = 0;
+      const existing = getRegistry();
+      rows.forEach(r => {
+        const reviewers = {}, dates = {};
+        for (let g = 1; g <= 5; g++) {
+          reviewers[g] = r[`Gate ${g} Reviewer`] || '';
+          dates[g] = r[`Gate ${g} Date`] || '';
+        }
+        existing.push({
+          contentId: r['Content ID'] || `IMPORT-${Date.now()}-${imported}`,
+          date: r['Date'] || new Date().toISOString().split('T')[0],
+          aiTool: r['AI Tool'] || '',
+          contentTitle: r['Title'] || '',
+          subject: r['Subject'] || '',
+          grade: r['Grade Level'] || '',
+          tier: parseInt((r['Risk Tier'] || '').replace(/[^\d]/g, '')) || 1,
+          status: r['Status'] || 'Approved',
+          reviewers, dates
+        });
+        imported++;
+      });
+      saveRegistry(existing);
+      refreshRegistry();
+      refreshDashboard();
+      showToast(`Imported ${imported} registry item${imported === 1 ? '' : 's'}.`, 'success');
+    } catch (err) {
+      showToast('Failed to import CSV. Check the file format.', 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ===== RELEASE CERTIFICATE (printable) =====
+function printReleaseCertificate(item) {
+  const w = window.open('', '_blank');
+  if (!w) { showToast('Allow pop-ups to print the certificate.', 'error'); return; }
+  const institution = (_store.institution || 'Institution Name Not Set').replace(/</g, '&lt;');
+  const issued = new Date().toLocaleDateString('en-NG', { year: 'numeric', month: 'long', day: 'numeric' });
+  const esc = (s) => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const gateRows = [1,2,3,4,5].map(g => `
+    <tr>
+      <td><strong>Gate ${g}</strong></td>
+      <td>${esc(item.reviewers && item.reviewers[g] || '—')}</td>
+      <td>${esc(item.dates && item.dates[g] || '—')}</td>
+    </tr>`).join('');
+  w.document.write(`<!DOCTYPE html><html><head><title>ACIF Release Certificate — ${esc(item.contentId)}</title>
+<style>
+  body { font-family: 'Inter', system-ui, sans-serif; color: #0C4E54; margin: 0; padding: 48px; max-width: 800px; margin: 0 auto; }
+  .cert-header { border-bottom: 3px solid #01696F; padding-bottom: 24px; margin-bottom: 32px; display:flex; justify-content:space-between; align-items:center; }
+  .cert-title { font-size: 28px; font-weight: 700; color: #01696F; margin: 0; }
+  .cert-subtitle { font-size: 14px; color: #555; margin-top: 4px; }
+  .badge { background: #E8F4F5; color: #01696F; padding: 6px 14px; border-radius: 20px; font-weight: 600; font-size: 13px; }
+  h2 { color: #01696F; font-size: 18px; margin-top: 32px; border-bottom: 1px solid #E8F4F5; padding-bottom: 8px; }
+  .row { display: grid; grid-template-columns: 200px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid #F0F0F0; font-size: 14px; }
+  .row strong { color: #0C4E54; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 14px; }
+  table th, table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #E8F4F5; }
+  table th { background: #E8F4F5; color: #01696F; }
+  .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid #E8F4F5; font-size: 12px; color: #777; }
+  .seal { margin-top: 40px; display:flex; gap: 60px; }
+  .seal div { flex: 1; border-top: 1px solid #555; padding-top: 6px; font-size: 12px; color: #555; }
+  @media print { body { padding: 24px; } }
+</style></head><body>
+  <div class="cert-header">
+    <div>
+      <h1 class="cert-title">ACIF Release Certificate</h1>
+      <div class="cert-subtitle">AI-Generated Content Integrity Framework v1.0</div>
+    </div>
+    <span class="badge">Tier ${esc(item.tier)} · ${esc(item.status)}</span>
+  </div>
+
+  <div class="row"><strong>Issuing Institution</strong><span>${institution}</span></div>
+  <div class="row"><strong>Certificate Issued</strong><span>${issued}</span></div>
+
+  <h2>Content Details</h2>
+  <div class="row"><strong>Content ID</strong><span>${esc(item.contentId)}</span></div>
+  <div class="row"><strong>Title</strong><span>${esc(item.contentTitle)}</span></div>
+  <div class="row"><strong>Subject</strong><span>${esc(item.subject)}</span></div>
+  <div class="row"><strong>Grade / Age Band</strong><span>${esc(item.grade)}</span></div>
+  <div class="row"><strong>AI Tool Used</strong><span>${esc(item.aiTool)}</span></div>
+  <div class="row"><strong>Review Completed</strong><span>${esc(item.date)}</span></div>
+
+  <h2>Five-Gate Verification Record</h2>
+  <table>
+    <thead><tr><th>Gate</th><th>Reviewer</th><th>Date</th></tr></thead>
+    <tbody>${gateRows}</tbody>
+  </table>
+
+  <div class="seal">
+    <div>Authorising Signatory</div>
+    <div>Date</div>
+  </div>
+
+  <div class="footer">
+    This certificate confirms that the above content was reviewed under the AI-Generated Content Integrity Framework (ACIF v1.0),
+    aligned with NERDC curriculum, NDPA 2023, ISO/IEC 42001, and UNESCO GenAI in Education guidance.
+    Framework: github.com/Chukwuemerie-ezieke/acif-framework · Issued by Harmony Digital Consults Ltd.
+  </div>
+  <script>setTimeout(() => window.print(), 250);</script>
+</body></html>`);
+  w.document.close();
+}
 
 function getNextContentId() {
   const year = new Date().getFullYear();
@@ -829,6 +1025,12 @@ function showRegistryDetail(item) {
         <span>${item.reviewers && item.reviewers[g] ? escapeHtml(item.reviewers[g]) + ' — ' + (item.dates[g] || '') : '—'}</span>
       </div>
     `).join('')}
+    <div style="margin-top: var(--space-5); display:flex; gap: var(--space-3); flex-wrap:wrap;">
+      <button class="btn btn-primary btn-sm" onclick='printReleaseCertificate(${JSON.stringify(item).replace(/'/g, "\\'")})'>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print Release Certificate
+      </button>
+    </div>
   `;
 
   modal.classList.add('open');
