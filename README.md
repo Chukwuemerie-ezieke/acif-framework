@@ -205,7 +205,7 @@ Under the following terms:
 
 ## About
 
-**Developed by [Harmony Digital Consults Ltd](https://harmonydigi.com)**
+**Developed by [Harmony Digital Consults Ltd](https://harmonydigitalconsults.com.ng)**
 Anambra State, Nigeria
 
 ACIF is part of Harmony Digital Consults' mission to make AI adoption in Nigerian education safe, ethical, and standards-compliant. The framework is designed for adoption by any educational institution in Nigeria and across Africa.
