@@ -13,19 +13,19 @@
   "icons": [
     {
       "src": "favicon-64.png",
-      "sizes": "64x64",
+      "sizes": "59x64",
       "type": "image/png",
       "purpose": "any"
     },
     {
       "src": "harmony-shield.png",
-      "sizes": "44x44",
+      "sizes": "88x96",
       "type": "image/png",
       "purpose": "any"
     },
     {
       "src": "harmony-shield-large.png",
-      "sizes": "192x192 512x512",
+      "sizes": "220x240",
       "type": "image/png",
       "purpose": "any maskable"
     }
